@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>아바쌤 발달평가 생성기 (만0세 ~ 만5세)</title>
+  <style>
+    :root{
+      --bg:#f6f3ff;
+      --card:#ffffff;
+      --line:#e7e1ff;
+      --line2:#efeaff;
+      --text:#1f1f29;
+      --muted:#616174;
+      --primary:#6b46ff;
+      --primary2:#5b35ff;
+      --pill:#f0ecff;
+      --shadow: 0 8px 28px rgba(40, 26, 100, 0.10);
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", Arial, "Helvetica Neue", sans-serif;
+      background: radial-gradient(1200px 600px at 10% 0%, #efeaff 0%, var(--bg) 45%, #f8f7ff 100%);
+      color:var(--text);
+    }
+    .wrap{
+      max-width: 1200px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+    .header{
+      background: linear-gradient(90deg, #ffffff 0%, #fbfaff 50%, #ffffff 100%);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .title{
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.2px;
+    }
+    .subtitle{
+      font-size: 13px;
+      color: var(--muted);
+      margin:0;
+      line-height: 1.35;
+    }
+
+    .grid{
+      display:flex;
+      gap: 16px;
+      margin-top: 16px;
+      align-items: stretch;
+    }
+    .col{
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      height: 100%;
+    }
+
+    .sectionTitle{
+      font-size: 14px;
+      font-weight: 800;
+      margin:0 0 10px 0;
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 10px 0 6px;
+      font-weight: 700;
+    }
+
+    select, textarea, input[type="text"]{
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 12px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+    textarea{
+      min-height: 220px;
+      resize: vertical;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .hint{
+      border: 1px dashed #d3c9ff;
+      background: #fbf9ff;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+      color:#2b2b3a;
+      margin-top: 10px;
+    }
+
+    .btnRow{
+      display:flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .btn{
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 14px;
+      flex: 1 1 140px;
+    }
+    .btn.primary{
+      background: linear-gradient(180deg, var(--primary) 0%, var(--primary2) 100%);
+      border-color: transparent;
+      color:#fff;
+    }
+    .btn:hover{ filter: brightness(0.98); }
+    .btn:active{ transform: translateY(1px); }
+
+    .topPills{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--pill);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color:#2b2b3a;
+      font-weight: 800;
+    }
+    .copyRow{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 12px;
+    }
+    .copyBtn{
+      border: 1px solid var(--line);
+      background:#fff;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor:pointer;
+    }
+
+    .outBlock{
+      border: 1px solid var(--line2);
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #fcfbff 100%);
+    }
+    .outHead{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .outNum{
+      width: 26px;
+      height: 26px;
+      border-radius: 9px;
+      background: #efeaff;
+      border: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 900;
+      font-size: 13px;
+      color:#3b2a8a;
+      flex: 0 0 auto;
+    }
+    .outTitle{
+      margin:0;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: -0.1px;
+    }
+    .outText{
+      margin:0;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 980px){
+      .grid{ flex-direction: column; }
+      .btn{ flex: 1 1 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <p class="title">아바쌤 발달평가 생성기 (만0세 ~ 만5세)</p>
+      <p class="subtitle">관찰기록(여러 건)을 붙여 넣으면 연령 기준(만0~2 표준보육 / 만3~5 누리과정)에 맞춰 1학기/2학기 발달평가를 생성합니다. (로컬 전용)</p>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="col">
+        <div class="card">
+          <p class="sectionTitle">입력</p>
+
+          <label for="age">연령</label>
+          <select id="age">
+            <option value="0">만0세</option>
+            <option value="1">만1세</option>
+            <option value="2">만2세</option>
+            <option value="3">만3세</option>
+            <option value="4" selected>만4세</option>
+            <option value="5">만5세</option>
+          </select>
+
+          <div class="hint" id="pasteGuide">
+            <b>[붙여넣기 안내]</b><br/>
+            관찰기록 텍스트의 내용은 관찰일지의 내용 중 <b>①(현재진행형 기록)</b>에 해당되는 내용을 <b>여러 건</b> 넣어주면 발달평가를 생성할 수 있습니다.<br/>
+            1학기의 성장보다 2학기 성장이 부족했을 경우에만 <b>“1학기보다 2학기 때 어떤 영역에서 성장이 부족하였다.”</b>라고 기록합니다.
+          </div>
+
+          <label for="obs">관찰기록 텍스트 (여러건 넣기)</label>
+          <textarea id="obs" placeholder="[관찰 1] ...&#10;&#10;[관찰 2] ...&#10;&#10;[관찰 3] ..."></textarea>
+
+          <div class="btnRow">
+            <button class="btn primary" id="genBtn">발달평가 생성하기</button>
+            <button class="btn" id="resetBtn">초기화</button>
+            <button class="btn" id="exampleBtn">예시 입력</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="col">
+        <div class="card">
+          <div class="topPills">
+            <span class="pill" id="pillAge">연령: 만4세</span>
+            <span class="pill" id="pillCats">영역·내용범주: -</span>
+          </div>
+
+          <div class="copyRow">
+            <button class="copyBtn" data-copy="all">전체 복사</button>
+            <button class="copyBtn" data-copy="s1">① 복사</button>
+            <button class="copyBtn" data-copy="s2">② 복사</button>
+            <button class="copyBtn" data-copy="p3">③ 복사</button>
+            <button class="copyBtn" data-copy="p4">④ 복사</button>
+          </div>
+
+          <div class="outBlock">
+            <div class="outHead">
+              <div class="outNum">1</div>
+              <p class="outTitle">① 1학기 발달평가 (영역 통합)</p>
+            </div>
+            <p class="outText" id="outS1">-</p>
+          </div>
+
+          <div class="outBlock">
+            <div class="outHead">
+              <div class="outNum">2</div>
+              <p class="outTitle">② 2학기 발달평가 (1학기 대비 수준 유지 &amp; 성장 반영)</p>
+            </div>
+            <p class="outText" id="outS2">-</p>
+          </div>
+
+          <div class="outBlock">
+            <div class="outHead">
+              <div class="outNum">3</div>
+              <p class="outTitle">③ 다음 관찰 포인트 (교사용 참고)</p>
+            </div>
+            <p class="outText" id="outP3">-</p>
+          </div>
+
+          <div class="outBlock">
+            <div class="outHead">
+              <div class="outNum">4</div>
+              <p class="outTitle">④ 가정과의 연계 제안 (가정용 참고)</p>
+            </div>
+            <p class="outText" id="outP4">-</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ---------- Utilities ----------
+  const $ = (id) => document.getElementById(id);
+
+  function uniq(arr){
+    const seen = new Set();
+    const out = [];
+    for(const s of arr){
+      const key = s.trim();
+      if(!key) continue;
+      if(seen.has(key)) continue;
+      seen.add(key);
+      out.push(key);
+    }
+    return out;
+  }
+
+  function pickN(arr, n){
+    const a = [...arr];
+    // Fisher-Yates shuffle
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a.slice(0, n);
+  }
+
+  function normalizeKoreanEnding(text){
+    // ✅ 줄바꿈(\n)은 유지하고, 줄 안에서만 공백을 정리한다
+    const lines = String(text ?? "").split("\n").map(line=>{
+      return line.replace(/[ \t]+/g, " ").trimEnd();
+    });
+
+    let s = lines.join("\n").trim();
+
+    // 중복 종결(다다/한다다/된다다) 제거
+    s = s.replace(/다다\./g, "다.");
+    s = s.replace(/한다다\./g, "한다.");
+    s = s.replace(/된다다\./g, "된다.");
+
+    // "다.다." 같은 경우 방지
+    s = s.replace(/다\.\s*다\./g, "다.");
+
+    // "주세요다." 제거
+    s = s.replace(/주세요다\./g, "주세요.");
+
+    // 줄 끝에 "다."가 두 번 붙는 케이스 방지(예: "증가한다다.")
+    s = s.replace(/(한다|된다|있다|보인다|늘어난다|높아진다|강화된다|확장된다)\s*다\./g, "$1.");
+    s = s.replace(/(증가한)다\./g, "$1다."); // 안전망
+
+    return s;
+  }
+
+  function ensureEndsWithDa(sentence){
+    let s = sentence.trim();
+    if(!s) return s;
+    // 대화/따옴표 제거(발달평가에서는 사용하지 않음)
+    s = s.replace(/[“”"]/g, "");
+    // 끝맺음 보정
+    if(/[.!?]$/.test(s)){
+      s = s.replace(/[!?]$/,".");
+      if(!/다\.$/.test(s)) s = s.replace(/\.$/, "다.");
+      return s;
+    }
+    if(/(다|한다|된다|있다|보인다|늘어난다|높아진다|강화된다|확장된다)$/.test(s)) return s + ".";
+    return s + "다.";
+  }
+
+  function asLines(sentences){
+    return uniq(sentences).map(s => ensureEndsWithDa(s));
+  }
+
+  function containsAny(text, keywords){
+    return keywords.some(k => text.includes(k));
+  }
+
+  // 성장 부족 신호(2학기 동일 수준 허용 조건)
+  function hasLowGrowthSignal(text){
+    const t = (text||"");
+    return /성장\s*부족|변화\s*적음|정체|유지에\s*머묾|어려움\s*지속|반복적으로\s*어려움|개선\s*미흡/.test(t);
+  }
+
+  // ---------- Category Labels (2019 개정 누리 5개 영역 한눈에보기 형식) ----------
+  const NURI = {
+    "신체운동·건강": ["신체활동 즐기기", "건강하게 생활하기", "안전하게 생활하기"],
+    "의사소통": ["듣기와 말하기", "읽기와 쓰기", "책과 이야기 즐기기"],
+    "사회관계": ["나를 알고 존중하기", "더불어 생활하기", "사회에 관심 가지기"],
+    "예술경험": ["아름다움 찾아보기", "예술적 표현하기", "예술 감상하기"],
+    "자연탐구": ["탐구 과정 즐기기", "생활 속에서 탐구하기", "자연과 더불어 살기"]
+  };
+
+  // ---------- Template banks ----------
+  // 스타일: 너무 딱딱하지 않되 "성장의 흐름"이 보이도록, 대화/따옴표 없이, 반복 문장 최소화
+  // age 3~5 : 누리과정 기반 문장 뱅크(2015 예시문 취지 반영 + 2019 범주명 표기)
+  const BANK_NURI = {
+    "신체운동·건강": {
+      base: [
+        "기본생활(식사·정리·위생)을 스스로 점검하며 안정적으로 유지하는 태도가 형성된다",
+        "활동 목적을 이해하고 몸 움직임을 조절하며 안전한 행동을 선택해 실천한다",
+        "도구를 사용할 때 손과 눈의 협응이 점차 좋아져 참여가 안정된다",
+        "필요한 순간에 잠시 멈추고 속도를 조절하며 규칙을 지키려는 시도가 늘어난다",
+      ],
+      high: [
+        "활동 계획에 따라 순서를 조절하고 마무리까지 이어가는 자기조절이 강화된다",
+        "상황에 따라 안전 기준을 스스로 점검하고 행동을 수정하는 빈도가 늘어난다",
+      ]
+    },
+    "의사소통": {
+      base: [
+        "경험한 내용을 말로 정리하며 이유·과정을 덧붙여 설명하는 길이가 길어진다",
+        "상대의 말을 끝까지 듣고 차례를 지켜 말하며 대화를 이어가는 태도가 안정된다",
+        "질문을 통해 궁금한 점을 구체화하고 필요한 정보를 연결해 표현하는 모습이 나타난다",
+        "그림책·자료의 내용을 떠올리거나 의미를 추측해 말로 연결하는 시도가 늘어난다",
+      ],
+      high: [
+        "상황을 설명할 때 계획·대안까지 덧붙여 표현하며 표현의 정확성이 높아진다",
+        "관찰·탐구의 결과를 문장으로 정리하고 핵심을 요약해 전달하는 능력이 향상된다",
+      ]
+    },
+    "사회관계": {
+      base: [
+        "또래와 역할을 나누고 약속을 지키며 협력하는 경험이 누적된다",
+        "갈등 상황에서 말로 조율하려는 태도가 늘어나며 관계 유지가 안정된다",
+        "자신의 감정과 요구를 말로 표현하고 상대의 입장을 고려하려는 시도가 보인다",
+        "규칙·차례·배려를 고려하며 함께하기를 지속하는 시간이 늘어난다",
+      ],
+      high: [
+        "양보·협상·사과·대안 제시 등으로 갈등을 해결하려는 시도가 구체화된다",
+        "집단 활동에서 책임감을 가지고 역할을 수행하며 공동의 목표에 참여한다",
+      ]
+    },
+    "예술경험": {
+      base: [
+        "다양한 재료와 표현 방법을 선택해 시도하며 완성 과정에서 표현을 이어간다",
+        "노래·리듬·동작·미술 등으로 느낌과 분위기를 나타내는 방식이 다양해진다",
+        "작품을 만든 뒤 과정을 되돌아보며 느낌을 말로 정리하는 태도가 형성된다",
+        "친구의 표현을 참고해 자신의 표현을 조절하거나 변형하는 시도가 나타난다",
+      ],
+      high: [
+        "표현 목표를 세우고 재료·방법을 비교해 선택하며 창의적 시도가 확장된다",
+        "감상 경험을 바탕으로 자신의 느낌을 구체적으로 설명하는 능력이 향상된다",
+      ]
+    },
+    "자연탐구": {
+      base: [
+        "관찰·비교·분류·예측을 시도하고 결과를 말로 정리하는 과정이 안정된다",
+        "생활 속 개념(수량·크기·무게·길이 등)을 활용해 설명하려는 모습이 나타난다",
+        "탐구 과정에서 기준을 세워 재분류하거나 다른 방법을 제안하는 시도가 늘어난다",
+        "자연·사물의 변화에 관심을 가지고 반복 탐색하며 발견한 점을 공유한다",
+      ],
+      high: [
+        "탐구 결과를 근거로 설명하고 자신의 생각을 수정하는 태도가 강화된다",
+        "여러 기준으로 비교·분류한 결과를 정리해 결론을 도출하는 능력이 향상된다",
+      ]
+    }
+  };
+
+  // age 0~2 : 표준보육과정 취지 문장 뱅크(너무 짧지 않게, 관찰 변화 흐름 중심)
+  const BANK_STD = {
+    "기본생활": {
+      base: [
+        "식사·수면·위생과 같은 기본생활에서 스스로 하려는 시도가 늘어난다",
+        "도움을 받으며 일과의 흐름을 예측하고 안정적으로 참여한다",
+        "필요를 표현하고 도움을 받아 스스로 마무리하려는 태도가 나타난다"
+      ],
+      high: [
+        "기본생활의 일부를 스스로 조절하며 안정적으로 유지하는 시간이 늘어난다",
+        "기분과 상태를 표현하며 스스로 조절하려는 시도가 강화된다"
+      ]
+    },
+    "신체운동": {
+      base: [
+        "대근육·소근육 활동에 자발적으로 참여하며 움직임이 다양해진다",
+        "도구를 잡고 조작하는 과정에서 손의 힘 조절이 조금씩 안정된다",
+        "이동·탐색 활동에 참여하며 주변 공간을 인식하는 범위가 넓어진다"
+      ],
+      high: [
+        "반복 경험을 통해 움직임의 정확성이 좋아지고 참여가 지속된다",
+        "간단한 규칙을 이해하고 안전한 행동을 시도하는 모습이 늘어난다"
+      ]
+    },
+    "의사소통": {
+      base: [
+        "말·몸짓·표정으로 요구를 표현하는 빈도가 늘어난다",
+        "간단한 지시를 이해하고 행동으로 반응하는 속도가 빨라진다",
+        "흥미 있는 대상을 가리키거나 소리로 알리며 상호작용을 이어간다"
+      ],
+      high: [
+        "단어·짧은 문장으로 상황을 표현하며 표현이 다양해진다",
+        "주의를 기울여 듣고 요청에 맞춰 행동을 선택하는 모습이 안정된다"
+      ]
+    },
+    "사회관계": {
+      base: [
+        "교사와의 애착 관계를 바탕으로 낯선 상황에서도 안정감을 유지한다",
+        "또래 곁에서 함께 놀이하려는 시도가 늘어난다",
+        "기분을 표현하고 도움을 받으며 감정이 조절되는 시간이 짧아진다"
+      ],
+      high: [
+        "또래와 상호작용을 시도하며 함께하는 시간이 점차 늘어난다",
+        "기다리기·차례와 같은 간단한 규칙 경험이 누적된다"
+      ]
+    },
+    "예술경험": {
+      base: [
+        "소리·색·촉감 등 감각 경험을 즐기며 표현 활동에 참여한다",
+        "다양한 재료를 탐색하고 반복적으로 시도하며 흥미를 유지한다",
+        "리듬·동작을 모방하고 변형하며 표현이 풍부해진다"
+      ],
+      high: [
+        "표현을 스스로 선택하고 시도하는 시간이 늘어난다",
+        "완성 경험을 통해 표현 활동에 대한 자신감이 형성된다"
+      ]
+    },
+    "탐구": {
+      base: [
+        "사물의 모양·소리·움직임에 관심을 가지고 반복적으로 탐색한다",
+        "주변 환경의 변화를 알아차리고 반응하는 모습이 늘어난다",
+        "간단한 분류나 비교를 시도하며 탐색을 지속한다"
+      ],
+      high: [
+        "탐색 결과를 몸짓·소리로 공유하며 상호작용이 확장된다",
+        "새로운 방법으로 시도해 보려는 탐구 의지가 강화된다"
+      ]
+    }
+  };
+
+  // ---------- Keyword-driven signals ----------
+  const KEYMAP_NURI = [
+    // 신체/건강/안전/기본생활
+    { k:["식사","도시락","밥","반찬","젓가락","숟가락","정리","정돈","위생","손씻","양치","화장실","안전","규칙","약속","멈추","천천히","줄서","기다"], domain:"신체운동·건강" },
+    // 의사소통
+    { k:["말","이야기","설명","질문","왜","어떻게","어떤","계획","대안","읽","쓰기","그림책","책","단어","문장","표현"], domain:"의사소통" },
+    // 사회관계
+    { k:["친구","또래","협력","양보","갈등","사과","약속","차례","역할","규칙","함께","도움","요청","배려"], domain:"사회관계" },
+    // 예술
+    { k:["미술","그림","만들","꾸미","노래","리듬","춤","악기","표현","감상","아름다움","색","소리","동작"], domain:"예술경험" },
+    // 자연탐구
+    { k:["관찰","비교","분류","예측","탐구","실험","측정","수량","크기","길이","무게","자연","곤충","식물","물","모래","돌","날씨"], domain:"자연탐구" }
+  ];
+
+  function detectFocusDomains(text){
+    const t = (text||"").replace(/\s+/g," ");
+    const hits = new Map();
+    for(const m of KEYMAP_NURI){
+      let score = 0;
+      for(const kk of m.k){
+        const re = new RegExp(kk, "g");
+        const found = (t.match(re)||[]).length;
+        score += found;
+      }
+      if(score>0){
+        hits.set(m.domain, (hits.get(m.domain)||0)+score);
+      }
+    }
+    // 기본 5영역은 항상 출력하지만, 표시는 "주요"만
+    const sorted = [...hits.entries()].sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
+    return sorted.length ? sorted : ["신체운동·건강","의사소통","사회관계"];
+  }
+
+  function pickNuriCategoriesForDomain(domain, text){
+    const t = (text||"");
+    const list = NURI[domain] || [];
+    // 키워드 기반 간단 매핑
+    const wants = [];
+    if(domain==="신체운동·건강"){
+      if(/안전|규칙|약속|멈추|천천히|주의/.test(t)) wants.push("안전하게 생활하기");
+      if(/식사|정리|위생|손씻|양치|화장실|건강/.test(t)) wants.push("건강하게 생활하기");
+      if(/달리기|점프|이동|운동|도구|놀이기구/.test(t)) wants.push("신체활동 즐기기");
+    }
+    if(domain==="의사소통"){
+      if(/읽|책|그림책|자료/.test(t)) wants.push("읽기와 쓰기");
+      if(/말|이야기|설명|질문|대화/.test(t)) wants.push("듣기와 말하기");
+      if(/이야기|책|그림책/.test(t)) wants.push("책과 이야기 즐기기");
+    }
+    if(domain==="사회관계"){
+      if(/감정|기분|자기|자신/.test(t)) wants.push("나를 알고 존중하기");
+      if(/친구|또래|협력|차례|약속|규칙/.test(t)) wants.push("더불어 생활하기");
+      if(/지역|우리나라|행사|공동체|사회/.test(t)) wants.push("사회에 관심 가지기");
+    }
+    if(domain==="예술경험"){
+      if(/아름|자연|소리|색|감상/.test(t)) wants.push("아름다움 찾아보기");
+      if(/미술|그림|만들|노래|춤|악기|표현/.test(t)) wants.push("예술적 표현하기");
+      if(/감상|듣|보며|관람/.test(t)) wants.push("예술 감상하기");
+    }
+    if(domain==="자연탐구"){
+      if(/관찰|비교|분류|예측|실험/.test(t)) wants.push("탐구 과정 즐기기");
+      if(/수량|크기|길이|무게|측정|돈|시간/.test(t)) wants.push("생활 속에서 탐구하기");
+      if(/자연|식물|동물|날씨|환경/.test(t)) wants.push("자연과 더불어 살기");
+    }
+
+    const picked = uniq(wants).filter(x=>list.includes(x));
+    if(picked.length>=2) return picked.slice(0,2);
+    // 부족하면 랜덤으로 채움
+    const remain = list.filter(x=>!picked.includes(x));
+    const add = pickN(remain, Math.max(0, 2-picked.length));
+    return [...picked, ...add].slice(0,2);
+  }
+
+  // 문장 다양화: 동일한 시작/구조 반복 방지용 교체 표현
+  const VARIANTS = {
+    "늘어난다": ["증가한다", "더 자주 나타난다", "확대된다"],
+    "안정된다": ["더 안정적이다", "점차 안정적이다", "점차 자연스러워진다"],
+    "형성된다": ["자리 잡는다", "점차 형성된다", "서서히 나타난다"],
+    "향상된다": ["개선된다", "높아진다", "발달한다"]
+  };
+  function diversifySentence(s, seed){
+    // seed는 영역/학기/인덱스로 적당히 섞는다
+    let out = s;
+    // 가볍게 한 개만 치환(과도치환 방지)
+    const keys = Object.keys(VARIANTS);
+    const pickKey = keys[seed % keys.length];
+    if(out.includes(pickKey)){
+      const reps = VARIANTS[pickKey];
+      out = out.replace(pickKey, reps[seed % reps.length]);
+    }
+    return out;
+  }
+
+  // domain block builder
+  function buildNuriDomainBlock(domain, cats, text, semester, age){
+    const bank = BANK_NURI[domain];
+    // 2~3개 문장 추출
+    const baseCount = 2;
+    const extra = (semester===2 ? 1 : 0); // 2학기는 조금 더 풍부
+    const count = baseCount + extra;
+
+    // 성장 부족이면 2학기에서 high 사용을 줄임
+    const lowGrowth = hasLowGrowthSignal(text);
+
+    const pool = [...bank.base];
+    if(semester===2 && !lowGrowth){
+      pool.push(...bank.high);
+      // 2학기: base 중 일부를 stronger로 치환하기 위해 high 비중 조금 올림
+      pool.push(...bank.high);
+    }
+
+    let chosen = pickN(pool, Math.min(count+1, pool.length)); // 여분 1
+    chosen = uniq(chosen);
+
+    // 1학기/2학기 차이를 자연스럽게 만들기:
+    // - 2학기는 "학기 후반으로 갈수록/점차/이전보다" 계열이 섞이도록 보정
+    if(semester===2 && !lowGrowth){
+      const booster = [
+        "학기 후반으로 갈수록 스스로 점검하고 조절하는 흐름이 자연스러워진다",
+        "이전보다 계획·이유를 덧붙여 정리하는 표현이 길어지는 경향이 나타난다",
+        "경험이 누적되며 시도 후 다시 조정하는 태도가 강화된다"
+      ];
+      chosen.push(booster[(domain.length + age) % booster.length]);
+    }
+
+    // 문장 다양화(반복 방지)
+    chosen = chosen.slice(0, count).map((s, i)=> diversifySentence(s, (semester*7 + age*3 + i)));
+
+    // 내용범주 라벨
+    const catLabel = cats.join(" · ");
+    const head = `(${domain} > ${catLabel})`;
+
+    // 문장 끝 처리
+    const lines = asLines(chosen);
+
+    return [head, ...lines, ""].join("\n");
+  }
+
+  // 통합 정리 3줄(학기별)
+  function buildSummary3(text, semester){
+    // 관찰 키워드 기반으로 적당히 선택
+    const t = text || "";
+    const pick = [];
+
+    // 1) 도움요청/표현
+    if(/도움|요청|말로|표현|설명|질문/.test(t)){
+      pick.push("필요한 순간에 도움을 구체적으로 요청하고, 이유·계획·대안을 덧붙여 표현하는 모습이 안정된다");
+    } else {
+      pick.push("자신의 생각과 요구를 말로 정리하고 상황에 맞게 표현하는 빈도가 늘어난다");
+    }
+
+    // 2) 선택/조절/규칙
+    if(/규칙|약속|선택|조절|멈추|천천히|차례/.test(t)){
+      pick.push("놀이 상황에서 스스로 선택하고 조절하는 경험이 누적되며 말·행동·관계가 점차 확장된다");
+    } else {
+      pick.push("활동의 목적을 이해하고 참여를 지속하며 스스로 조절하는 시간이 늘어난다");
+    }
+
+    // 3) 참여 지속/자기주도
+    if(semester===2){
+      pick.push("경험이 축적되면서 스스로 시도한 뒤 조정하는 빈도가 늘어나고 참여의 지속성이 높아진다");
+    } else {
+      pick.push("경험이 축적되면서 스스로 시도하는 빈도가 늘어나고 참여의 지속성이 높아진다");
+    }
+
+    return asLines(pick).map(s=>`- ${s}`).join("\n");
+  }
+
+  // 다음 관찰 포인트(교사용)
+  function buildNextPoints(age){
+    // 고정형(요청하신 스타일 유지)
+    const lines = [
+      "또래와 갈등이 생길 때 말로 조율(양보·협상·사과·대안 제시)을 시도하는지를 관찰한다",
+      "탐구 활동에서 비교·분류·예측을 말로 정리하고 결과를 설명하는지 관찰한다",
+      "상황을 설명할 때 이유·계획·대안까지 말로 덧붙이는지 관찰한다",
+      "규칙을 회상하고 스스로 행동을 선택해 실천하는지 관찰한다"
+    ];
+    // 연령 낮으면(0~2) 더 단순하게
+    if(age<=2){
+      return asLines([
+        "도움이 필요할 때 몸짓·말로 요청하는지 관찰한다",
+        "기다리기·차례 등 간단한 규칙 경험이 누적되는지 관찰한다",
+        "탐색 활동에서 반복 시도하고 관심을 유지하는지 관찰한다"
+      ]).join("\n");
+    }
+    return asLines(lines).join("\n");
+  }
+
+  // 가정 연계(반드시 ~주세요.로 끝)
+  function buildHomeLink(age){
+    const lines = [];
+    if(age<=2){
+      lines.push("하루 한 번 아이가 무엇을 원하는지 몸짓·말로 표현할 수 있도록 선택지를 두고 기다려 주세요");
+      lines.push("식사·정리·위생 과정에서 아이가 스스로 마무리할 시간을 충분히 확보해 주세요");
+      lines.push("놀이 중 갈등이 생기면 교사가 사용한 말(양보·기다리기)을 짧게 다시 들려 주세요");
+    } else {
+      lines.push("하루 한 번 오늘 있었던 일을 떠올리며 무엇을 했고 어떻게 했는지 아이가 말로 정리해 볼 수 있도록 질문해 주세요");
+      lines.push("규칙이 필요한 상황에서는 한 가지 규칙을 정하고 아이가 스스로 선택해 실천할 시간을 충분히 기다려 주세요");
+      lines.push("갈등 상황이 있었던 날에는 양보·사과·대안 제시 중 한 가지를 말로 연습해 보고 실제 상황에서 사용해 볼 수 있도록 도와 주세요");
+      lines.push("탐구 활동 후에는 왜 그렇게 생각했는지 이유를 말로 덧붙이게 하고 결과를 끝까지 설명해 보도록 격려해 주세요");
+    }
+    // 각 문장 끝을 "주세요."로 강제
+    return lines.map(l => {
+      let s = l.trim();
+      s = s.replace(/다\.$/,"");
+      if(!/주세요$/.test(s)) s = s.replace(/주세요\.?$/,"주세요");
+      if(!/주세요$/.test(s)) s = s + " 주세요";
+      return s + ".";
+    }).join("\n");
+  }
+
+  // 0~2 표준보육: 영역 통합 문단 (간단히 5영역 형태로 맞춤 출력)
+  function buildStdSemester(text, semester){
+    // 표준보육은 5개 영역 대신, 실제 현장 문서에 맞춰도 되지만
+    // UI는 통합형이므로 "기본생활/신체운동/의사소통/사회관계/예술경험/탐구"를 녹여 통합한다.
+    const lowGrowth = hasLowGrowthSignal(text);
+    const blocks = [];
+
+    const domains = [
+      {name:"기본생활", cats:["일과 적응", "기본생활 습관"]},
+      {name:"신체운동", cats:["대근육", "소근육", "안전"]},
+      {name:"의사소통", cats:["의사표현", "이해"]},
+      {name:"사회관계", cats:["애착", "또래관계"]},
+      {name:"예술경험", cats:["감각놀이", "표현"]},
+      {name:"탐구", cats:["탐색", "관찰"]},
+    ];
+
+    for(const d of domains){
+      const bank = BANK_STD[d.name];
+      const pool = [...bank.base];
+      if(semester===2 && !lowGrowth){
+        pool.push(...bank.high, ...bank.high);
+      }
+      const chosen = pickN(pool, (semester===2 ? 3 : 2));
+      const head = `(${d.name})`;
+      const lines = asLines(chosen.map((s,i)=>diversifySentence(s, semester*11 + i)));
+      blocks.push([head, ...lines, ""].join("\n"));
+    }
+
+    const summary = buildSummary3(text, semester);
+
+    return normalizeKoreanEnding(blocks.join("\n") + summary);
+  }
+
+  // 누리 3~5: 학기 생성
+  function buildNuriSemester(age, text, semester){
+    const blocks = [];
+    const usedCats = [];
+
+    const domains = ["신체운동·건강","의사소통","사회관계","예술경험","자연탐구"];
+    for(const domain of domains){
+      const cats = pickNuriCategoriesForDomain(domain, text);
+      usedCats.push(`${domain} > ${cats.join(" · ")}`);
+      blocks.push(buildNuriDomainBlock(domain, cats, text, semester, age));
+    }
+
+    const summary = buildSummary3(text, semester);
+    const out = normalizeKoreanEnding(blocks.join("\n") + summary);
+    return { out, usedCats };
+  }
+
+  function updatePills(age, usedCats){
+    $("pillAge").textContent = `연령: 만${age}세`;
+    $("pillCats").textContent = `영역·내용범주: ${usedCats && usedCats.length ? usedCats.join(" | ") : "-"}`;
+  }
+
+  function buildAll(){
+    const age = Number($("age").value);
+    const text = $("obs").value.trim();
+
+    updatePills(age, []);
+
+    if(!text){
+      $("outS1").textContent = "-";
+      $("outS2").textContent = "-";
+      $("outP3").textContent = "-";
+      $("outP4").textContent = "-";
+      $("pillCats").textContent = "영역·내용범주: -";
+      return;
+    }
+
+    if(age <= 2){
+      // 표준보육(만0~2)
+      const s1 = buildStdSemester(text, 1);
+      const s2 = buildStdSemester(text, 2);
+      $("outS1").textContent = s1;
+      $("outS2").textContent = s2;
+      $("outP3").textContent = normalizeKoreanEnding(buildNextPoints(age));
+      $("outP4").textContent = normalizeKoreanEnding(buildHomeLink(age));
+      updatePills(age, ["표준보육(통합 서술)"]);
+      return;
+    }
+
+    // 누리(만3~5)
+    const sem1 = buildNuriSemester(age, text, 1);
+    const sem2 = buildNuriSemester(age, text, 2);
+
+    $("outS1").textContent = sem1.out;
+    $("outS2").textContent = sem2.out;
+
+    // 다음 관찰 포인트 / 가정 연계
+    $("outP3").textContent = normalizeKoreanEnding(buildNextPoints(age));
+    $("outP4").textContent = normalizeKoreanEnding(buildHomeLink(age));
+
+    // 내용범주 요약 표시
+    const usedCats = uniq([...sem1.usedCats]).slice(0, 8); // 너무 길면 줄임
+    updatePills(age, usedCats);
+  }
+
+  // ---------- Copy ----------
+  function copyText(text){
+    const t = (text||"").trim();
+    if(!t || t==="-") return;
+    navigator.clipboard.writeText(t);
+  }
+
+  function getCopyPayload(which){
+    const s1 = $("outS1").textContent;
+    const s2 = $("outS2").textContent;
+    const p3 = $("outP3").textContent;
+    const p4 = $("outP4").textContent;
+
+    if(which==="s1") return `① 1학기 발달평가 (영역 통합)\n\n${s1}`;
+    if(which==="s2") return `② 2학기 발달평가 (1학기 대비 수준 유지 & 성장 반영)\n\n${s2}`;
+    if(which==="p3") return `③ 다음 관찰 포인트 (교사용 참고)\n\n${p3}`;
+    if(which==="p4") return `④ 가정과의 연계 제안 (가정용 참고)\n\n${p4}`;
+    return [
+      `① 1학기 발달평가 (영역 통합)\n\n${s1}`,
+      `② 2학기 발달평가 (1학기 대비 수준 유지 & 성장 반영)\n\n${s2}`,
+      `③ 다음 관찰 포인트 (교사용 참고)\n\n${p3}`,
+      `④ 가정과의 연계 제안 (가정용 참고)\n\n${p4}`
+    ].join("\n\n");
+  }
+
+  // ---------- Example ----------
+  function putExample(){
+    const age = Number($("age").value);
+    if(age<=2){
+      $("obs").value =
+`[관찰 1]
+식사 후 스스로 손을 씻으려 이동하며, 교사의 안내에 맞춰 물을 틀고 닦는 과정을 시도하였다.
+
+[관찰 2]
+블록을 쌓고 무너뜨리며 반복 탐색을 이어가고, 관심 있는 소리를 따라하며 상호작용을 지속하였다.
+
+[관찰 3]
+또래가 사용하는 놀잇감을 바라보다가 가까이 다가가 함께 만지며 놀이를 이어가려 하였다.`;
+    } else {
+      $("obs").value =
+`[관찰 1]
+식사 시간에 스스로 도시락을 꺼내고 반찬의 종류를 살피며 먹을 양을 조절하였다. 정리 시간에는 자리와 주변을 정돈하고 손 씻기와 같은 위생 절차를 스스로 점검하였다.
+
+[관찰 2]
+놀이 중 친구와 역할을 나누어 진행하다가 차례 문제로 갈등이 생겼으나 말로 상황을 설명하고 대안을 제시하며 함께하기를 이어가려 하였다.
+
+[관찰 3]
+탐구 활동에서 구체물을 기준을 정해 분류하고, 학기 초에는 한 가지 기준만 사용했으나 최근에는 색과 크기 두 가지 기준으로 다시 분류하였다. 결과를 친구에게 설명하고 이유를 말로 덧붙였다.
+
+[관찰 4]
+미술 활동에서 재료를 스스로 선택해 표현하고, 완성 후 느낌을 말로 정리하였다. 도구 사용과 정리를 스스로 마무리하였다.`;
+    }
+  }
+
+  // ---------- Events ----------
+  $("genBtn").addEventListener("click", buildAll);
+  $("resetBtn").addEventListener("click", () => {
+    $("obs").value = "";
+    $("outS1").textContent = "-";
+    $("outS2").textContent = "-";
+    $("outP3").textContent = "-";
+    $("outP4").textContent = "-";
+    updatePills(Number($("age").value), []);
+  });
+  $("exampleBtn").addEventListener("click", () => {
+    putExample();
+    buildAll();
+  });
+
+  $("age").addEventListener("change", () => {
+    updatePills(Number($("age").value), []);
+  });
+
+  document.querySelectorAll(".copyBtn").forEach(btn=>{
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-copy");
+      const payload = getCopyPayload(key);
+      copyText(payload);
+    });
+  });
+
+  // init
+  updatePills(Number($("age").value), []);
+})();
+</script>
+</body>
+</html>
